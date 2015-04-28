@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\TheATeamInterface.pubxml" />
-    <Content Include="ViewPage1.cshtml" />
+    <Content Include="ailments.cshtml">
+      <BrowseToURL>~/ailments</BrowseToURL>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

@@ -1,0 +1,42 @@
+﻿@using System.Configuration
+@using System.Data.SqlClient
+@using System.Data
+@using System.Dynamic
+@using System.Data.SqlClient
+
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Welcome to the A Team (With One I) Health Information System Interface</h1>
+        <p>The time is @DateTime.Now</p>
+
+        <p>All current appointments:</p>
+        @{
+            // Get the connection string from the web.config
+            string cns = ConfigurationManager.ConnectionStrings["sqlconnection"].ConnectionString;
+
+            // Get the data from the database.  The 'using' statements will ensure tha the SqlClient objects
+            //  are cleaned up properly and their resources released.
+            SqlConnection connection = new SqlConnection(cns);
+            connection.Open();
+            SqlDataAdapter adp = new SqlDataAdapter("SELECT name FROM ailment", connection);
+            DataTable table = new DataTable();
+            adp.Fill(table);
+            var result = new List<dynamic>();
+            foreach (DataRow row in table.Rows)
+            {
+                var obj = (IDictionary<string, object>)new ExpandoObject();
+                foreach (DataColumn col in table.Columns)
+                {
+                    obj.Add(col.ColumnName, row[col.ColumnName]);
+                }
+                result.Add(obj);
+            }
+            var grid = new WebGrid(result);
+                
+          
+        }
+
+        @grid.GetHtml()
+    </body>
+</html>
