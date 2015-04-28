@@ -61,6 +61,8 @@
     <Content Include="ailments.cshtml">
       <BrowseToURL>~/ailments</BrowseToURL>
     </Content>
+    <None Include="App_Code\helpers.cshtml" />
+    <Content Include="layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

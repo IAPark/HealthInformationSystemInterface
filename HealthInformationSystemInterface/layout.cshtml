@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="http://cdn.foundation5.zurb.com/foundation.css" />
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"> </script>
+    <script src="http://cdn.foundation5.zurb.com/foundation.js"> </script>
+    <title>A Team (and one I)</title>
+</head>
+<body>
+    <nav class="top-bar foundation-bar" data-topbar>
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="/">A Team (and one I)</a></h1>
+            </li>
+        </ul>
+        @RenderSection("menu")
+    </nav>
+    @RenderBody()
+</body>
+</html>

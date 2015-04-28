@@ -4,13 +4,20 @@
 @using System.Dynamic
 @using System.Data.SqlClient
 
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1>Welcome to the A Team (With One I) Health Information System Interface</h1>
-        <p>The time is @DateTime.Now</p>
+@{
+    Layout = "layout.cshtml";
+}
 
-        <p>All current appointments:</p>
+@section menu {
+    @helpers.menu(Request.FilePath)
+}
+<div class="row">
+  <div class="small-12 small-centered columns">
+      <p>All current appointments</p>
+  </div>
+</div>
+<div class="row">
+    <div class="small-12 small-centered columns">
         @{
             // Get the connection string from the web.config
             string cns = ConfigurationManager.ConnectionStrings["sqlconnection"].ConnectionString;
@@ -33,10 +40,7 @@
                 result.Add(obj);
             }
             var grid = new WebGrid(result);
-                
-          
-        }
-
-        @grid.GetHtml()
-    </body>
-</html>
+        } 
+        @grid.GetHtml()  
+    </div>
+</div>
