@@ -72,11 +72,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="registration.cshtml">
+      <BrowseToURL>~/</BrowseToURL>
+    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Code\DbUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>

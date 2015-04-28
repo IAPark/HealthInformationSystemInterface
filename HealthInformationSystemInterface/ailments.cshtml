@@ -1,8 +1,4 @@
-﻿@using System.Configuration
-@using System.Data.SqlClient
-@using System.Data
-@using System.Dynamic
-@using System.Data.SqlClient
+﻿@using HealthInformationSystemInterface.App_Code
 
 @{
     Layout = "layout.cshtml";
@@ -11,35 +7,11 @@
 @section menu {
     @helpers.menu(Request.FilePath)
 }
-<div class="row">
-  <div class="small-12 small-centered columns">
-      <p>All current appointments</p>
-  </div>
-</div>
-<div class="row">
-    <div class="small-12 small-centered columns">
-        @{
-            // Get the connection string from the web.config
-            string cns = ConfigurationManager.ConnectionStrings["sqlconnection"].ConnectionString;
 
-            // Get the data from the database.  The 'using' statements will ensure tha the SqlClient objects
-            //  are cleaned up properly and their resources released.
-            SqlConnection connection = new SqlConnection(cns);
-            connection.Open();
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT name FROM ailment", connection);
-            DataTable table = new DataTable();
-            adp.Fill(table);
-            var result = new List<dynamic>();
-            foreach (DataRow row in table.Rows)
-            {
-                var obj = (IDictionary<string, object>)new ExpandoObject();
-                foreach (DataColumn col in table.Columns)
-                {
-                    obj.Add(col.ColumnName, row[col.ColumnName]);
-                }
-                result.Add(obj);
-            }
-            var grid = new WebGrid(result);
+<div class="row">
+    <div class="small-3 small-centered text-center columns">
+        @{
+            var grid = DbUtil.getWebGridFromSelection("SELECT name as 'ailments' FROM ailment");
         } 
         @grid.GetHtml()  
     </div>

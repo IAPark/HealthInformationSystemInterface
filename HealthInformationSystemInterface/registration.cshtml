@@ -1,0 +1,80 @@
+﻿@using System.Configuration
+@using System.Data.SqlClient
+@using System.Data
+@using System.Dynamic
+@using HealthInformationSystemInterface.App_Code
+
+
+
+
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu(Request.FilePath)
+}
+
+@section title {
+    @(": Registration")
+}
+
+@if (IsPost)
+{
+    var con = DbUtil.getConnection();
+    var table = DbUtil.getDataTable("select * from user_profile");
+    var row = table.NewRow();
+    row["password"] = Request.Form["password"];
+    row["username"] = Request.Form["username"];
+    row["email"] = Request.Form["email"];
+    row["user_profile_levelID"] = Request.Form["level"];
+    table.Rows.Add(row);
+    
+
+
+
+    <h1>Welcome @Request.Form["username"] please add patient details</h1>
+    
+  } else 
+  {
+    <div class="row collapse">
+        <div class="small-6 small-centered columns">
+            <h1>Registration</h1>
+        </div>
+    </div>
+    <form  method="post">
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <input type="text" placeholder="Username" name="username" id="username" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <input type="text" placeholder="Email" name="email" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <input type="password" placeholder="Password" name="password" required />
+            </div>
+        </div>
+        <div class="row">
+             <div class="small-6 small-centered columns">
+                <select name="level" required>
+                    @{
+                        var levels = DbUtil.getDataTable("SELECT name, user_profile_levelID as id from user_profile_level");
+                        foreach (DataRow level in levels.Rows)
+                        {
+                            <option value="@level["id"]">@level["name"]</option>
+                        }   
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <button class="button">Register</button>
+            </div>
+        </div>
+    </form>
+}
