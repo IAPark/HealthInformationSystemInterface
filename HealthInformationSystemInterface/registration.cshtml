@@ -12,7 +12,7 @@
 }
 
 @section menu {
-    @helpers.menu(Request.FilePath)
+    @helpers.menu("/")
 }
 
 @section title {
@@ -21,17 +21,18 @@
 
 @if (IsPost)
 {
-    var con = DbUtil.getConnection();
-    var table = DbUtil.getDataTable("select * from user_profile");
+    SqlDataAdapter adp = DbUtil.getAdapter("select * from user_profile where 1=0");
+    
+    DataTable table = new DataTable();
+    adp.Fill(table);
+    
     var row = table.NewRow();
     row["password"] = Request.Form["password"];
     row["username"] = Request.Form["username"];
     row["email"] = Request.Form["email"];
     row["user_profile_levelID"] = Request.Form["level"];
     table.Rows.Add(row);
-    
-
-
+    adp.Update(table);
 
     <h1>Welcome @Request.Form["username"] please add patient details</h1>
     

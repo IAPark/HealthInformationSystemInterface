@@ -39,14 +39,19 @@ namespace HealthInformationSystemInterface.App_Code
             return new WebGrid(result);
         }
 
-        public static DataTable getDataTable(String query)
+        public static DataTable getDataTable(string query)
         {
-            SqlConnection connection = DbUtil.getConnection();
-
-            SqlDataAdapter adp = new SqlDataAdapter(query, connection);
+            SqlDataAdapter adp = getAdapter(query);
             DataTable table = new DataTable();
             adp.Fill(table);
             return table;
+        }
+        public static SqlDataAdapter getAdapter(string query)
+        {
+            SqlConnection connection = DbUtil.getConnection();
+            var adp = new SqlDataAdapter(query, connection);
+            new SqlCommandBuilder(adp);
+            return adp;
         }
     }
 }
