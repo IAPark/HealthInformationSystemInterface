@@ -1,0 +1,11 @@
+﻿@helper menu(string url) {
+    string[] titles = {"Home", "Ailments"};
+    string[] links = {"/", "/ailments"};
+    <section class="top-bar-section">
+        <ul class="right">
+            @for (int i = 0; i < titles.Length; ++i) {
+                <li@(url == links[i]?" class=active":"" )> <a href="@links[i]">@titles[i]</a></li>    
+            }
+        </ul>
+    </section>
+}

@@ -1,0 +1,18 @@
+﻿@using HealthInformationSystemInterface.App_Code
+
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("/ailments")
+}
+
+<div class="row">
+    <div class="small-3 small-centered text-center columns">
+        @{
+            var grid = DbUtil.getWebGridFromSelection("SELECT name as 'ailments' FROM ailment");
+        } 
+        @grid.GetHtml()  
+    </div>
+</div>

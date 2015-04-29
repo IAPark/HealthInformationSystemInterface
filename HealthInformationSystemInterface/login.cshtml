@@ -1,0 +1,60 @@
+﻿@using HealthInformationSystemInterface.App_Code
+
+
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("login")
+}
+
+@section title {
+    @(": Login")
+}
+
+@{
+    var target = (Request.Params["target"] != null)?Request.Params["target"]:"/";
+}
+@if (IsPost)
+{
+    var user = DbUtil.getDataTable("select * from user_profile where username='" + Request.Form["username"] + "'");
+    if (user.Rows.Count > 0 && user.Rows[0]["password"].Equals(Request.Form["password"])) {
+        Session["level"] = user.Rows[0]["user_profile_levelID"].ToString();
+        <script>
+            window.location.href = "@(target)";
+        </script>
+    } else 
+    {
+        <script>
+            window.location.href = "@("login?error=true")";
+        </script>
+    }
+}
+else
+{
+    if (Request.Params["error"] != null)
+    {
+        <div data-alert class="alert-box alert">
+            <p>Error: bad username or password</p>
+        </div>
+    }
+    
+    <form method="post" action="login?target=@target">
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <input type="text" name="username" placeholder="Username" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <input type="text" name="password" placeholder="Password" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 small-centered columns">
+                <button class="button">Login</button>
+            </div>
+        </div>
+    </form>
+}

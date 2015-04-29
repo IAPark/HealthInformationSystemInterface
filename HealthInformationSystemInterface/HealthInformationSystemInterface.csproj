@@ -57,8 +57,15 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="login.cshtml">
+      <BrowseToURL>~/login</BrowseToURL>
+    </Content>
     <None Include="Properties\PublishProfiles\TheATeamInterface.pubxml" />
-    <Content Include="ViewPage1.cshtml" />
+    <Content Include="ailments.cshtml">
+      <BrowseToURL>~/ailments</BrowseToURL>
+    </Content>
+    <None Include="App_Code\helpers.cshtml" />
+    <Content Include="layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -68,11 +75,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="registration.cshtml">
+      <BrowseToURL>~/</BrowseToURL>
+    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Code\DbUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>
