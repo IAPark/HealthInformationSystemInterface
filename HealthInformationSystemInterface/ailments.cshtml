@@ -1,5 +1,6 @@
-﻿@using HealthInformationSystemInterface.App_Code
-
+﻿@using System.Data.SqlClient
+@using System.Data
+@using HealthInformationSystemInterface.App_Code
 @{
     Layout = "layout.cshtml";
 }
@@ -8,11 +9,47 @@
     @helpers.menu("/ailments")
 }
 
+@helpers.authorize(2)
+
+@if (IsPost)
+{
+    SqlDataAdapter adp = DbUtil.getAdapter("select * from ailment where 1=0");
+
+    DataTable table = new DataTable();
+    adp.Fill(table);
+
+    var row = table.NewRow();
+    row["name"] = Request.Form["name"];
+    table.Rows.Add(row);
+    adp.Update(table);
+}
+
+<form method="post">
+    <div class="row">
+        <div class="small=8 columns small-centered">
+            <div class="row collapse">
+                <div class="small-10 columns">
+                    <input type="text" name="name" placeholder="Name" />
+                </div>
+                <div class="small-2 columns">
+                    <button class="button postfix">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .ailments { 
+        width: 100%;
+}
+</style>
+
 <div class="row">
-    <div class="small-3 small-centered text-center columns">
+    <div class="small-12 small-centered text-center columns">
         @{
-            var grid = DbUtil.getWebGridFromSelection("SELECT name as 'ailments' FROM ailment");
+            var grid = DbUtil.getWebGridFromSelection("SELECT name as 'Ailments' FROM ailment");
         } 
-        @grid.GetHtml()  
+        @grid.GetHtml(tableStyle:"ailments")  
     </div>
 </div>

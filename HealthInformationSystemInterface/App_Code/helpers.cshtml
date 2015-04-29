@@ -9,3 +9,16 @@
         </ul>
     </section>
 }
+
+@helper authorize(params int[] args)
+{
+    
+    int current_level = Session["level"]!=null?(int) Session["level"]:0;
+    
+    if (!args.Contains(current_level)) {
+        <script>
+            console.log("login failed");
+            window.location.href = "@("login?target=" + @Request.FilePath)";
+        </script>
+    }
+}
