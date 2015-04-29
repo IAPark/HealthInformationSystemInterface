@@ -1,7 +1,5 @@
-﻿@using System.Configuration
-@using System.Data.SqlClient
+﻿@using System.Data.SqlClient
 @using System.Data
-@using System.Dynamic
 @using HealthInformationSystemInterface.App_Code
 
 
@@ -21,18 +19,7 @@
 
 @if (IsPost)
 {
-    SqlDataAdapter adp = DbUtil.getAdapter("select * from user_profile where 1=0");
-    
-    DataTable table = new DataTable();
-    adp.Fill(table);
-    
-    var row = table.NewRow();
-    row["password"] = Request.Form["password"];
-    row["username"] = Request.Form["username"];
-    row["email"] = Request.Form["email"];
-    row["user_profile_levelID"] = Request.Form["level"];
-    table.Rows.Add(row);
-    adp.Update(table);
+    DbUtil.addFromForm(Request.Form, "ailment");
 
     <h1>Welcome @Request.Form["username"] please add patient details</h1>
     
@@ -61,7 +48,7 @@
         </div>
         <div class="row">
              <div class="small-6 small-centered columns">
-                <select name="level" required>
+                <select name="user_profile_levelID" required>
                     @{
                         var levels = DbUtil.getDataTable("SELECT name, user_profile_levelID as id from user_profile_level");
                         foreach (DataRow level in levels.Rows)

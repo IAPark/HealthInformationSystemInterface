@@ -1,6 +1,6 @@
 ﻿@helper menu(string url) {
-    string[] titles = {"Home", "Ailments"};
-    string[] links = {"/", "/ailments"};
+    string[] titles = {"Home", "Ailments", "Employees"};
+    string[] links = {"/", "/ailments", "/employees"};
     <section class="top-bar-section">
         <ul class="right">
             @for (int i = 0; i < titles.Length; ++i) {
@@ -8,4 +8,15 @@
             }
         </ul>
     </section>
+}
+
+@helper authorize(params int[] args)
+{
+    
+    int current_level = Session["level"]!=null?(int) Session["level"]:0;
+    
+    if (!args.Contains(current_level)) {
+        Response.Redirect("login?target=" + @Request.FilePath);
+        Response.End();
+    }
 }
