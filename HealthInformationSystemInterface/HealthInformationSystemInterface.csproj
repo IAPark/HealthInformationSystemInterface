@@ -60,6 +60,7 @@
     <Content Include="login.cshtml">
       <BrowseToURL>~/login</BrowseToURL>
     </Content>
+    <Content Include="appointments.cshtml" />
     <None Include="Properties\PublishProfiles\TheATeamInterface.pubxml" />
     <Content Include="ailments.cshtml">
       <BrowseToURL>~/ailments</BrowseToURL>

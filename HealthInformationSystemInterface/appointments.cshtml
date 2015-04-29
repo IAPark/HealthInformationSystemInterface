@@ -1,0 +1,20 @@
+﻿@using HealthInformationSystemInterface.App_Code
+
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("/appointment")
+}
+@{
+    var target = (Request.Params["target"] != null)?Request.Params["target"]:"/";
+}
+<div class="row">
+    <div class="small-3 small-centered text-center columns">
+        @{
+            var grid = DbUtil.getWebGridFromSelection("SELECT room, starttime, endtime, patient.lastname+', '+patient.firstname AS patientName FROM Appointment INNER JOIN Patient ON appointment.username = patient.username WHERE appointment.username ='Mami Tomoe'");
+        }
+        @grid.GetHtml()
+    </div>
+</div>
