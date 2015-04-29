@@ -1,0 +1,108 @@
+﻿@using System.Data.SqlClient
+@using System.Data
+@using HealthInformationSystemInterface.App_Code
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("/employees")
+}
+
+@helpers.authorize(2, 3, 4)
+
+
+@if (IsPost)
+{
+    DbUtil.addFromForm(Request.Form, "employee");
+}
+
+<style>
+    .employees { 
+        width: 100%;
+}
+</style>
+
+<form method="post">
+    <div class="row collapse">
+        <div class="small=12 columns small-centered">
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <input type="text" name="first_name" placeholder="First name" required/>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" name="last_name" placeholder="Last Name" required/>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" name="SSN" placeholder="SSN" required/>
+                </div>
+            </div>
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <input type="text" name="phone" placeholder="Phone Number" required/>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" name="address" placeholder="Address" required/>
+                </div>
+                <div class="small-4 columns">
+                    <input type="number" name="salary" placeholder="Salary" required/>
+                </div>
+            </div>
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <input type="text" name="position" placeholder="Position" />
+                </div>
+                <div class="small-4 columns">
+                    <select name="facilityID" required>
+                        @{
+                            var facilities = DbUtil.getDataTable("SELECT name, facilityID as id from facility");
+                            foreach (DataRow facility in facilities.Rows)
+                            {
+                                <option value="@facility["id"]">@facility["name"]</option>
+                            }   
+                        }
+                    </select>
+                </div>
+                <div class="small-4 columns">
+                    <select name="departmentID" required>
+                        @{
+                            var departments = DbUtil.getDataTable("SELECT name, departmentID as id from department");
+                            foreach (DataRow department in departments.Rows)
+                            {
+                                <option value="@department["id"]">@department["name"]</option>
+                            }   
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row collapse">
+                <div class="small-6 columns">
+                    <select name="username" required>
+                        @{
+                            var profiles = DbUtil.getDataTable("SELECT username from user_profile");
+                            foreach (DataRow profile in profiles.Rows)
+                            {
+                                <option value="@profile["username"]">@profile["username"]</option>
+                            }   
+                        }
+                    </select>
+                </div>
+                <div class="small-6 columns">
+                    <button class="button postfix">Hire</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="small-12 small-centered text-center columns">
+        @{
+            var grid = DbUtil.getWebGridFromSelection("SELECT e.SSN as SSN, (e.first_name + ' ' + e.last_name) as Name, e.Address as Address," + 
+                " e.Phone as 'Phone Number', e.Position as Position, e.Salary as Salary, d.Name as Department, f.Name as Facility " +
+                "FROM employee as e left join department as d on e.departmentID=d.departmentID " +
+                " left join facility as f on e.facilityID=f.facilityID");
+        } 
+        @grid.GetHtml(tableStyle:"employees")  
+    </div>
+</div>

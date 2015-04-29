@@ -1,6 +1,6 @@
 ﻿@helper menu(string url) {
-    string[] titles = {"Home", "Ailments"};
-    string[] links = {"/", "/ailments"};
+    string[] titles = {"Home", "Ailments", "Employees"};
+    string[] links = {"/", "/ailments", "/employees"};
     <section class="top-bar-section">
         <ul class="right">
             @for (int i = 0; i < titles.Length; ++i) {
@@ -16,9 +16,7 @@
     int current_level = Session["level"]!=null?(int) Session["level"]:0;
     
     if (!args.Contains(current_level)) {
-        <script>
-            console.log("login failed");
-            window.location.href = "@("login?target=" + @Request.FilePath)";
-        </script>
+        Response.Redirect("login?target=" + @Request.FilePath);
+        Response.End();
     }
 }

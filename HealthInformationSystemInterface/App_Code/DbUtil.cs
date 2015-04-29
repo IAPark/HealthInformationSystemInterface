@@ -7,6 +7,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Configuration;
+using System.Collections.Specialized;
 
 namespace HealthInformationSystemInterface.App_Code
 {
@@ -53,5 +54,30 @@ namespace HealthInformationSystemInterface.App_Code
             new SqlCommandBuilder(adp);
             return adp;
         }
+
+        //assumes the form has names to match the columns in the db
+        public static void addFromForm(NameValueCollection form, string table_name)
+        {
+            SqlDataAdapter adp = DbUtil.getAdapter("select * from " + table_name + " where 1=0");
+
+            DataTable table = new DataTable();
+            adp.Fill(table);
+
+            var row = table.NewRow();
+
+            foreach (DataColumn column in table.Columns)
+            {
+                string name = column.ColumnName;
+
+                if (form[name] != null)
+                {
+                    row[name] = form[name];
+                }
+            }
+
+            table.Rows.Add(row);
+            adp.Update(table);
+        }
+
     }
 }

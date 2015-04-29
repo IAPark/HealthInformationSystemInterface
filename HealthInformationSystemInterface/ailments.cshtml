@@ -9,19 +9,13 @@
     @helpers.menu("/ailments")
 }
 
-@helpers.authorize(2)
 
 @if (IsPost)
 {
-    SqlDataAdapter adp = DbUtil.getAdapter("select * from ailment where 1=0");
+    @helpers.authorize(2)
 
-    DataTable table = new DataTable();
-    adp.Fill(table);
+    DbUtil.addFromForm(Request.Form, "ailment");
 
-    var row = table.NewRow();
-    row["name"] = Request.Form["name"];
-    table.Rows.Add(row);
-    adp.Update(table);
 }
 
 <form method="post">
