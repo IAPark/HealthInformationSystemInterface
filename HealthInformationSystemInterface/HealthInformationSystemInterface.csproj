@@ -57,6 +57,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="login.cshtml">
+      <BrowseToURL>~/login</BrowseToURL>
+    </Content>
     <None Include="Properties\PublishProfiles\TheATeamInterface.pubxml" />
     <Content Include="ailments.cshtml">
       <BrowseToURL>~/ailments</BrowseToURL>
