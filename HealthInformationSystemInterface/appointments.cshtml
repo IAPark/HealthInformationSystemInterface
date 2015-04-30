@@ -7,13 +7,13 @@
 @section menu {
     @helpers.menu("/appointment")
 }
-@{
-    var target = (Request.Params["target"] != null)?Request.Params["target"]:"/";
-}
+
 <div class="row">
     <div class="small-3 small-centered text-center columns">
         @{
-            var grid = DbUtil.getWebGridFromSelection("SELECT room, starttime, endtime, patient.lastname+', '+patient.firstname AS patientName FROM Appointment INNER JOIN Patient ON appointment.username = patient.username WHERE appointment.username ='Mami Tomoe'");
+            string username = (string)Session["user"];
+            string patientQuery = "SELECT room, starttime, endtime, patient.lastname+', '+patient.firstname AS patientName, employee.last_name+', '+employee.first_name AS doctorName FROM appointment INNER JOIN Patient  ON appointment.username = patient.username INNER JOIN doctors_appointment ON appointment.appointmentID = doctors_appointment.appointmentID INNER JOIN medical_prof ON doctors_appointment.medical_profID = medical_prof.medical_profID INNER JOIN employee ON employee.username = medical_prof.username WHERE patient.username = '";
+            var grid = DbUtil.getWebGridFromSelection(patientQuery + username + "'");
         }
         @grid.GetHtml()
     </div>
