@@ -60,13 +60,18 @@
     <Content Include="login.cshtml">
       <BrowseToURL>~/login</BrowseToURL>
     </Content>
-    <Content Include="appointments.cshtml" />
+    <Content Include="appointments.cshtml">
+      <BrowseToURL>~/appointments</BrowseToURL>
+    </Content>
     <None Include="Properties\PublishProfiles\TheATeamInterface.pubxml" />
     <Content Include="ailments.cshtml">
       <BrowseToURL>~/ailments</BrowseToURL>
     </Content>
     <None Include="App_Code\helpers.cshtml" />
     <Content Include="layout.cshtml" />
+    <Content Include="schedule.cshtml">
+      <BrowseToURL>~/schedule</BrowseToURL>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
