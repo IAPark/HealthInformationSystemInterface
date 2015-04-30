@@ -19,7 +19,7 @@
 
 @if (IsPost)
 {
-    DbUtil.addFromForm(Request.Form, "ailment");
+    DbUtil.addFromForm(Request.Form, "user_profile");
 
     <h1>Welcome @Request.Form["username"] please add patient details</h1>
     

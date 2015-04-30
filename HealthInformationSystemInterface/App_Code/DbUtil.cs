@@ -68,7 +68,7 @@ namespace HealthInformationSystemInterface.App_Code
             foreach (DataColumn column in table.Columns)
             {
                 string name = column.ColumnName;
-
+                //this check is probably not needed, but I'm not sure about behavior, especially with self incrementing primary keys
                 if (form[name] != null)
                 {
                     row[name] = form[name];
