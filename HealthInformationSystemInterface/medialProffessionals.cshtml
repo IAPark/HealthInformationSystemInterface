@@ -1,0 +1,72 @@
+﻿@using System.Data.SqlClient
+@using System.Data
+@using HealthInformationSystemInterface.App_Code
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("/medialproffessionals")
+}
+
+@helpers.authorize(2, 3, 4)
+
+
+@if (IsPost)
+{
+    DbUtil.addFromForm(Request.Form, "medical_prof");
+}
+
+<style>
+    .medical_profionals { 
+        width: 100%;
+}
+</style>
+
+<form method="post">
+    <div class="row collapse">
+        <div class="small=12 columns small-centered">
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <select name="username" required>
+                        @{
+                            var employees = DbUtil.getDataTable("SELECT username, (first_name + ' ' + last_name) as name from employee");
+                            foreach (DataRow employee in employees.Rows)
+                            {
+                                <option value="@employee["username"]">@employee["name"]</option>
+                            }   
+                        }
+                    </select>
+                </div>
+                <div class="small-4 columns">
+                    <select name="specialtyID" required>
+                        @{
+                            var specialties = DbUtil.getDataTable("SELECT name, specialtyID from specialty");
+                            foreach (DataRow specialty in specialties.Rows)
+                            {
+                                <option value="@specialty["specialtyID"]">@specialty["name"]</option>
+                            }   
+                        }
+                    </select>
+                </div>
+                <div class="small-4 columns">
+                    <button class="button postfix">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="small-12 small-centered text-center columns">
+        @{
+            var grid = DbUtil.getWebGridFromSelection("SELECT (e.first_name + ' ' + e.last_name) as Name, e.Position as Position, " +
+                "s.name as Specialty, d.Name as Department, f.Name as Facility " +
+                "FROM medical_prof as m left join specialty as s on m.specialtyID=s.specialtyID " +
+                "left join employee as e on e.username=m.username "+
+                "left join department as d on e.departmentID=d.departmentID " + 
+                "left join facility as f on e.facilityID=f.facilityID ");
+        } 
+        @grid.GetHtml(tableStyle:"medical_profionals")  
+    </div>
+</div>
