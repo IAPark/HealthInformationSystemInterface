@@ -63,6 +63,12 @@
     <Content Include="appointments.cshtml">
       <BrowseToURL>~/appointments</BrowseToURL>
     </Content>
+    <Content Include="employees.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="MedicalProfessionals.cshtml">
+      <BrowseToURL>~/medicalproffessionals</BrowseToURL>
+    </Content>
     <None Include="Properties\PublishProfiles\TheATeamInterface.pubxml" />
     <Content Include="ailments.cshtml">
       <BrowseToURL>~/ailments</BrowseToURL>
