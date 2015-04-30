@@ -8,12 +8,14 @@
     @helpers.menu("/schedule")
 }
 
+@helpers.authorize(2);
+
 <div class="row">
     <div class="small-3 small-centered text-center columns">
         @{
             string username = (string)Session["user"];
-            string patientQuery = "SELECT room, starttime, endtime, patient.lastname+', '+patient.firstname AS patientName, employee.last_name+', '+employee.first_name AS doctorName FROM appointment INNER JOIN Patient  ON appointment.username = patient.username INNER JOIN doctors_appointment ON appointment.appointmentID = doctors_appointment.appointmentID INNER JOIN medical_prof ON doctors_appointment.medical_profID = medical_prof.medical_profID INNER JOIN employee ON employee.username = medical_prof.username WHERE patient.username = '";
-            var grid = DbUtil.getWebGridFromSelection(patientQuery + username + "'");
+            string doctorQuery = "SELECT facility.name AS Facility, appointment.room, appointment.starttime, appointment.endtime, patient.lastname+', '+patient.firstname AS Patient, ailment.name AS Ailment FROM appointment INNER JOIN doctors_appointment ON doctors_appointment.appointmentID = appointment.appointmentID INNER JOIN patient ON patient.username = appointment.username INNER JOIN appoints_relate_to_ailment ON appoints_relate_to_ailment.appointmentid = appointment.appointmentID INNER JOIN ailment ON ailment.id = appoints_relate_to_ailment.ailmentID INNER JOIN medical_prof ON medical_prof.medical_profID = doctors_appointment.medical_profID INNER JOIN employee ON employee.username = medical_prof.username INNER JOIN facility ON facility.facilityID = appointment.facilityID WHERE employee.username = '";
+            var grid = DbUtil.getWebGridFromSelection(doctorQuery + username + "'");
         }
         @grid.GetHtml()
     </div>
