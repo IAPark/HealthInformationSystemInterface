@@ -1,6 +1,6 @@
 ﻿@helper menu(string url) {
-    string[] titles = { "Home", "Ailments", "Employees", "Medical Professionals", "Appointments", "Schedule" };
-    string[] links = { "/", "/ailments", "/employees", "/medicalprofessionals", "/appointments", "/schedule" };
+    string[] titles = { "Home", "Patient Profile", "Ailments", "Employees", "Medical Professionals", "Appointments", "Schedule" };
+    string[] links = { "/", "patient_profile", "/ailments", "/employees", "/medicalprofessionals", "/appointments", "/schedule" };
     <section class="top-bar-section">
         <ul class="right">
             @for (int i = 0; i < titles.Length; ++i) {

@@ -1,4 +1,9 @@
 ﻿@using HealthInformationSystemInterface.App_Code
+@using System.Data
+@using System
+@using System.Globalization
+@using System.Data.SqlClient
+
 
 @{
     Layout = "layout.cshtml";
@@ -8,13 +13,149 @@
     @helpers.menu("/appointments")
 }
 
+@helpers.authorize(5)
+
+@if (IsPost)
+{
+
+    var connection = DbUtil.getConnection();
+    SqlCommand insert_appointment = new SqlCommand("insert into appointment (starttime, endtime, reason, room, facilityID, username) " +
+        "values(@starttime, @endtime, @reason, @room, @facilityID, @username); SELECT SCOPE_IDENTITY();", connection);
+    // add them all
+
+    var starttime = DateTime.Parse(Uri.UnescapeDataString(Request.Form["starttime"]), null, DateTimeStyles.RoundtripKind);
+    var endtime = DateTime.Parse(Uri.UnescapeDataString(Request.Form["endtime"]), null, DateTimeStyles.RoundtripKind);
+
+
+    insert_appointment.Parameters.AddWithValue("@starttime", starttime);
+    insert_appointment.Parameters.AddWithValue("@endtime", endtime);
+    insert_appointment.Parameters.AddWithValue("@reason", Uri.UnescapeDataString(Request.Form["reason"]));
+    insert_appointment.Parameters.AddWithValue("@facilityID", Uri.UnescapeDataString(Request.Form["facilityID"]));
+    insert_appointment.Parameters.AddWithValue("@room", Request.Form["room"]);
+    insert_appointment.Parameters.AddWithValue("@username", Session["user"]);
+
+
+    //actually insert and get the id at the same time
+    decimal appointmentID = (decimal)insert_appointment.ExecuteScalar();
+
+    
+    // handle multiple doctors
+    SqlDataAdapter doctors_adp = DbUtil.getAdapter("select * from doctors_appointment where 1=0");
+
+    DataTable doctors = new DataTable();
+    doctors_adp.Fill(doctors);
+
+    foreach (string doctorID in Request.Form["doctors"].Split(','))
+    {
+        var row = doctors.NewRow();
+        row["medical_profID"] = int.Parse(doctorID);
+        row["appointmentID"] = appointmentID;
+        doctors.Rows.Add(row);
+    }
+
+    doctors_adp.Update(doctors);
+
+    // handle multiple doctors
+    SqlDataAdapter ailment_adp = DbUtil.getAdapter("select * from appoints_relate_to_ailment where 1=0");
+
+    DataTable ailements = new DataTable();
+    ailment_adp.Fill(ailements);
+
+    foreach (string ailmentID in Request.Form["ailments"].Split(','))
+    {
+        var row = ailements.NewRow();
+        row["ailmentID"] = int.Parse(ailmentID);
+        row["appointmentID"] = appointmentID;
+        ailements.Rows.Add(row);
+    }
+
+    ailment_adp.Update(ailements);
+
+}
+
+
+
+<style>
+    .appointments { 
+        width: 100%;
+    }
+</style>
+
+<form method="post">
+    <div class="row collapse">
+        <div class="small-4 columns">
+            <input type="datetime-local" name="starttime" placeholder="Start Time" required />
+        </div>
+        <div class="small-4 columns">
+            <input type="datetime-local" name="endtime" placeholder="End Time" required />
+        </div>
+        <div class="small-4 columns">
+            <input type="text" name="reason" placeholder="Reason" />
+        </div>
+    </div>
+    <div class="row collapse">
+        <div class="small-2 columns">
+            <span class="prefix">Related to ailments</span>
+        </div>
+        <div class="small-4 columns">
+            <select multiple name="ailments" required>
+                @{
+                    var ailments = DbUtil.getDataTable("SELECT name, id from ailment");
+                    foreach (DataRow ailment in ailments.Rows)
+                    {
+                        <option value="@ailment["id"]">@ailment["name"]</option>
+                    }   
+                }
+            </select>
+        </div>
+         <div class="small-2 columns">
+            <span class="prefix">Doctor</span>
+        </div>
+        <div class="small-4 columns">
+            <select multiple name="doctors">
+                @{ 
+                    var options = DbUtil.getDataTable("SELECT (e.first_name + ' ' + e.last_name) as name, m.medical_profID as id from medical_prof as m left join employee e on e.username=m.username");
+                    foreach (DataRow doctor in options.Rows)
+                    {
+                        <option value="@doctor["id"]">@doctor["name"]</option>
+                    } 
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row collapse">
+       <div class="small-4 columns">
+            <select name="facilityID" required>
+                @{
+                    var facilities = DbUtil.getDataTable("SELECT name, facilityID as id from facility");
+                    foreach (DataRow facility in facilities.Rows)
+                    {
+                    <option value="@facility["id"]">@facility["name"]</option>
+                    }   
+                }
+            </select>
+        </div>
+        <div class="small-4 columns">
+            <input type="number" name="room" placeholder="Room Number" required />
+        </div>
+        <div class="small-4 columns">
+            <button class="button postfix">Add</button>
+        </div>
+    </div>
+</form>
+
+
 <div class="row">
-    <div class="small-3 small-centered text-center columns">
+    <div class="small-12 columns">
         @{
             string username = (string)Session["user"];
-            string patientQuery = "SELECT room, starttime, endtime, patient.lastname+', '+patient.firstname AS patientName, employee.last_name+', '+employee.first_name AS doctorName FROM appointment INNER JOIN Patient  ON appointment.username = patient.username INNER JOIN doctors_appointment ON appointment.appointmentID = doctors_appointment.appointmentID INNER JOIN medical_prof ON doctors_appointment.medical_profID = medical_prof.medical_profID INNER JOIN employee ON employee.username = medical_prof.username WHERE patient.username = '";
+            string patientQuery = "SELECT room, starttime, endtime, reason, patient.lastname+', '+patient.firstname AS 'Patient''s Name', employee.last_name+', '+employee.first_name AS 'Doctor''s Name' " +
+                "FROM appointment INNER JOIN Patient ON appointment.username = patient.username " +
+                "INNER JOIN doctors_appointment ON appointment.appointmentID = doctors_appointment.appointmentID " +
+                "INNER JOIN medical_prof ON doctors_appointment.medical_profID = medical_prof.medical_profID " +
+                "INNER JOIN employee ON employee.username = medical_prof.username WHERE patient.username = '";
             var grid = DbUtil.getWebGridFromSelection(patientQuery + username + "'");
         }
-        @grid.GetHtml()
+        @grid.GetHtml(tableStyle:"appointments")
     </div>
 </div>

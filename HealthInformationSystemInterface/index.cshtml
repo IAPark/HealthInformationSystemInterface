@@ -1,0 +1,52 @@
+﻿@using HealthInformationSystemInterface.App_Code
+
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("/")
+}
+
+<div class="row">
+    <div class="small-12 columns text-center">
+         <h1>Our ERD</h1>
+        <img src="ERD.png" alt="The best ERD ever">
+    </div>
+</div>
+
+<div class="row">
+    <div class="small-4 columns">
+        <h2>Who we are</h2>
+        <div class="panel">
+            <p>We are a group of college students trying to make a simple medical information system
+                as part of CS-33007 Database System Design at Kent State Univesity.
+            </p>
+            <ul>
+                <li>Isaac Park</li>
+                <li>Anthony Scot</li>
+                <li>Andrew Grant</li>
+                <li>Adam Carlet</li>
+            </ul>
+        </div>
+    </div>
+    <div class="small-4 columns">
+        <h2>Our problem</h2>
+        <div class="panel">
+            <p>We knew we had a large progress on our hands when this project was assigned at the start of the semester,
+                but now nearing the end we feel we have achieved an acceptable balance of scale and complexity
+            </p>
+        </div>
+    </div>
+    <div class="small-4 columns">
+        <h2>Our solution</h2>
+        <div class="panel">
+            <p>Most of our solution can be seen above in our ERD. The biggest challenges we experienced were related to trying
+                to implement the interface at such a late date. This was both hard from a technical standpoint, but also didn't
+                give us time to fix the db based on problems we found of which there where several. Most notable duplication of
+                information and often bad fields such as age instead of date of birth. The interface's source can be found on <a href="https://github.com/anths95/HealthInformationSystemInterface/">Github</a>
+            </p>
+        </div>
+    </div>
+
+</div>

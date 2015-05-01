@@ -69,7 +69,7 @@ namespace HealthInformationSystemInterface.App_Code
             {
                 string name = column.ColumnName;
                 //this check is probably not needed, but I'm not sure about behavior, especially with self incrementing primary keys
-                if (form[name] != null)
+                if (form[name] != null && !form[name].Equals(""))
                 {
                     row[name] = form[name];
                 }

@@ -1,0 +1,109 @@
+﻿@using System.Data.SqlClient
+@using System.Data
+@using HealthInformationSystemInterface.App_Code
+@{
+    Layout = "layout.cshtml";
+}
+
+@section menu {
+    @helpers.menu("/patient_profile")
+}
+
+@helpers.authorize(1,2,3,4,5)
+
+@if (IsPost)
+{
+    SqlDataAdapter adp = DbUtil.getAdapter("select * from patient where username='"+Session["user"]+"'");
+
+    DataTable patient = new DataTable();
+    adp.Fill(patient);
+
+    var row = (patient.Rows.Count > 0) ? patient.Rows[0] : patient.NewRow();
+
+    foreach (DataColumn column in patient.Columns)
+    {
+        string name = column.ColumnName;
+        if (Request.Form[name] != null && !Request.Form[name].Equals(""))
+        {
+            row[name] = Request.Form[name];
+        }
+    }
+
+    row["username"] = Session["user"];
+
+    if (!(patient.Rows.Count > 0))
+    {
+        patient.Rows.Add(row);
+    }
+    adp.Update(patient);
+}
+
+
+<style>
+    .ailments { 
+        width: 100%;
+}
+</style>
+<form method="post">
+    <div class="row">
+        <div class="small-12 small-centered text-center columns">
+            @{
+                var table = DbUtil.getDataTable("SELECT * FROM Patient where username='"+Session["user"]+"'");
+
+                DataRow user = (table.Rows.Count > 0) ? table.Rows[0] : table.NewRow();
+            
+                <div class="small-12 columns">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <input type="text" name="firstname" placeholder="First name" value="@user["firstname"]"/>
+                        </div>
+                        <div class="small-4 columns">
+                            <input type="text" name="lastname" placeholder="First name" value="@user["lastname"]"/>
+                        </div>
+                        <div class="small-4 columns">
+                            <input type="text" name="SSN" placeholder="ssn" value="@user["SSN"]"/>
+                        </div>
+                    </div>
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <input type="number" name="phone" placeholder="Phone Number" value="@user["phone"]"/>
+                        </div>
+                        <div class="small-4 columns">
+                            <input type="text" name="address" placeholder="Address" value="@user["address"]"/>
+                        </div>
+                        <div class="small-2 columns">
+                            <input type="text" name="city" placeholder="City" value="@user["city"]"/>
+                        </div>
+                        <div class="small-2 columns">
+                            <input type="text" name="state" placeholder="State" value="@user["state"]"/>
+                        </div>
+                    </div>
+                    <div class="row collapse">
+                        <div class="small-2 columns">
+                            <input type="text" name="age" placeholder="Age" value="@user["age"]"/>
+                        </div>
+                        <div class="small-2 columns">
+                            <span class="prefix">Doctor</span>
+                        </div>
+                        <div class="small-4 columns">
+                            <select name="doctorID">
+                                @{
+                                    var doctors = DbUtil.getDataTable("SELECT (e.first_name + ' ' + e.last_name) as name, m.medical_profID as id from medical_prof as m left join employee e on e.username=m.username");
+                                    foreach (DataRow doctor in doctors.Rows)
+                                    {
+                                        <option value="@doctor["id"]" @(user["doctorID"].Equals(doctor["id"])?"selected":"")>
+                                        @doctor["name"]</option>
+                                    }   
+                                }
+                            </select>
+                        </div>
+                        <div class="small-4 columns">
+                            <button class="button postfix">Save</button>
+                        </div>
+                    </div>
+                </div>
+            } 
+
+        </div>
+    </div>
+</form>
